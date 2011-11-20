@@ -1,0 +1,130 @@
+
+<html>
+	<head>
+		<title>Fat Flying Fish</title>
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css" />
+		<link href='http://fonts.googleapis.com/css?family=Patrick+Hand' rel='stylesheet' type='text/css' />
+		<link href='http://fonts.googleapis.com/css?family=Actor' rel='stylesheet' type='text/css' />
+		<script type="text/javascript" 
+				src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+		<script type="text/javascript">
+			(function ($) {
+			// VERTICALLY ALIGN FUNCTION
+			$.fn.vAlign = function() {
+				return this.each(function(i){
+					var ah = $(this).height();
+					var ph = $(this).parent().height();
+					var mh = Math.ceil((ph-ah) / 2);
+					$(this).css('margin-top', mh);
+				});
+			};
+			})(jQuery);
+			function scrollTo(selector){
+			$('html,body').animate({
+				scrollTop: $(selector).offset().top
+			}, 500);
+			}
+			$(document).ready(function() {
+				var vph = $(window).height();   
+				var vpw = $(window).width();   
+				$('.step').css('width',  vpw+"px");
+				$('.step').css('height', vph+"px");
+
+				$('img').load(function() {
+					$('.step_content').vAlign();
+				});
+
+				$(".step .arrow").click(function(e) {
+					e.preventDefault();
+					var currentStep = parseInt($(this)
+									    .parent().parent().attr('id')
+										.replace('step_',''));
+					currentStep++;
+					scrollTo("#step_"+currentStep.toString());
+				});
+			});
+		</script>
+		<style>
+			html {
+				font-family: Actor;
+				font-size: 20px;
+			}
+			h1, h2 { font-family: 'Patrick Hand';  }
+			h1 { font-size: 36px; margin-bottom: 15px; margin-top: 20px }
+			h2 { font-size: 30px; margin-bottom: 15px; margin-top: 15px }
+			strong {font-weight: bold;}
+			#main_fish {display: inline-block; clear: both;  }
+			.step { width: 100%; height: 100%; text-align: center;  }
+			.step_content { display: inline-block; width: 450px; }
+			#first {  }
+			.arrow { display: inline-block; margin-top: 20px; }
+		</style>
+	</head>
+<body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=291845334182357";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div id="step_1" class="step">
+	<div class="step_content">
+		<img id="main_fish" src="/images/fat_flying_fish.png" style="" />
+		<h2>When a friend is nearby, Fat Flying Fish goes BLEEP!</h2>
+		<a class="arrow" href="#"><img src="/images/arrow_down.png" /></a>
+	</div>
+</div>
+<div id="step_2" class="step">
+	<div class="step_content">
+		<img src="/images/no_check_in.png" />
+		<h2>NO check-ins required.</h2> 
+		<p>The Fat Flying Fish works automatically.</p>
+		<a class="arrow" href="#"><img src="/images/arrow_down.png" /></a>
+	</div>
+</div>
+<div id="step_3" class="step">
+	<div class="step_content">
+		<img src="/images/agent.png" />
+		<h2>NO creepyness.</h2>
+		<p>The Fish doesn't share your precise location.<br />Only notifies friends that you a nearby.</p>
+		<a class="arrow" href="#"><img src="/images/arrow_down.png" /></a>
+	</div>
+</div>
+<div id="step_4" class="step">
+	<div class="step_content">
+	<img src="/images/facebook.png" />
+	<h2>NO signup required.</h2> 
+	<p>The Fish uses your Facebook account.</p>
+	<a class="arrow" href="#"><img src="/images/arrow_down.png" /></a>
+	</div>
+</div>
+<div id="step_5" class="step">
+	<div class="step_content">
+		<img src="/images/close_friends.png" />
+		<h2>ONLY for real friends.</h2> 
+		<p>The Fish will only send notifications to people that you've put in your <strong>Close Friends list</strong> on Facebook.</p>
+		<a class="arrow" href="#"><img src="/images/arrow_down.png" /></a>
+	</div>
+</div>
+<div id="step_6" class="step">
+	<div class="step_content">
+	<img src="/images/spam.jpg" />
+	<h2>WON'T spam your friends.</h2>
+	<p>Only notifies friends that are both nearby <strong>and</strong> have the Fat Flying Fish app - will never post to your feed.</p>
+	<a class="arrow" href="#"><img src="/images/arrow_down.png" /></a>
+	</div>
+</div>
+<div id="step_7" class="step">
+	<div class="step_content" style="text-align: left">
+	<img src="/images/fat_flying_fish_small.png" />
+	<h2>Coming soon.</h2>
+	<p>Like us to be notified when Fat Flying Fish is available to download.</p><br />
+	<div class="fb-like" data-href="http://www.facebook.com/pages/Fat-Flying-Fish/296459913708988" data-send="false" data-width="500" data-show-faces="true" data-font="trebuchet ms"></div>
+	</div>
+</div>
+
+</body>
+</html>
