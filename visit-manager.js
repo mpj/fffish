@@ -1,5 +1,5 @@
-exports.VisitManager = function () {
-    
+exports.VisitManager = function (server) {
+    server.store();
 };
 exports.VisitManager.prototype = {
     save: function (callback) {
