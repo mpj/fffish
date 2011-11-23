@@ -1,8 +1,9 @@
 exports.VisitManager = function (server) {
-    server.store();
+    this.server = server;
 };
 exports.VisitManager.prototype = {
-    save: function (callback) {
+    save: function (id, lat, long, callback) {
+    	this.server.store(id, lat, long);
     	callback(true);
     }
 };

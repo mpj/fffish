@@ -9,9 +9,20 @@ vows.describe('VisitManager').addBatch({
     'given that we have a mock mongo server': {
     	topic: function() {
     		return {
-    			store_was_called: false,
-    			store: function() {
-    				this.store_was_called = true;
+    			id: 0,
+    			lat: 0,
+    			long: 0,
+    			store_was_called_with_params: function(id, lat, long) {
+    				return (
+	    				this.id == id &&
+    					this.lat == lat && 
+    					this.long == long);
+	    		},
+    			store: function(id, lat, long) {
+    				this.id = id;
+    				this.lat = lat;
+    				this.long = long;
+    				return true;
     			}
     		}	
     	},
@@ -24,18 +35,20 @@ vows.describe('VisitManager').addBatch({
 	        	}
 	        },
 
-	        'and we call save': {
+	        'and we call save with some parameters': {
 	        	topic: function(topic) {
-	        		topic.manager.save(this.callback)
-	        		return 
+	        		topic.manager.save('999991', 123.4, 456.7, this.callback);
 	        	},
 	        	'returns true': function(result) {
-	        		assert.equal(result, true)
+	        		assert.equal(result, true);
 	        	}
 	        },
 
 	        'mongo_store_should_have_been_called': function(topic){
-	        	assert.equal(topic.mongo.store_was_called, true);
+	        	assert.isTrue(
+		        	topic.mongo.store_was_called_with_params(
+		        		'999991', 123.4, 456.7
+		        ));
 	        }
 	    }
     }
