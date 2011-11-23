@@ -6,11 +6,16 @@ var visitManager = require('../visit-manager');
 var VisitManager   = visitManager.VisitManager;
 
 vows.describe('VisitManager').addBatch({
-    'updateLocation': {
+    'given a VisitManager exists': {
         topic: new(VisitManager),
 
-        'can call save': function (manager) {
-            assert.equal (manager.save(), true);
+        'and we call save': {
+        	topic: function(manager) {
+        		manager.save(this.callback);
+        	},
+        	'returns true': function(result) {
+        		assert.equal(result, true)
+        	}
         }
     }
 }).export(module); // Export the Suite
