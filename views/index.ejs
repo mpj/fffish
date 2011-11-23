@@ -44,6 +44,15 @@
 					currentStep++;
 					scrollTo("#step_"+currentStep.toString());
 				});
+
+				window.fbAsyncInit = function() {
+				    FB.init({appId: '132860020070788', status: true, cookie: true, xfbml: true});
+					FB.Event.subscribe('edge.create', function(href, widget) {
+						// Tell Google Analytics that we had a like!
+						_gaq.push(['_trackEvent', 'fb_like_complete', 'Root', 'Like of Root Page']);
+					});
+				
+				  };
 			});
 		</script>
 		<style>
