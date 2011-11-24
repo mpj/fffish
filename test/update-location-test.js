@@ -38,15 +38,12 @@ vows.describe('VisitManager').addBatch({
     
 	    'given a VisitManager exists': {
 	        topic: function(mongo) {
-	        	return {
-	        		mongo: mongo,
-	        		manager: new VisitManager(mongo)
-	        	}
+	        	return new VisitManager(mongo)
 	        },
 
 	        'and we call save with some parameters': {
-	        	topic: function(topic) {
-	        		topic.manager.save('999991', 123.4, 456.7, this.callback);
+	        	topic: function(manager) {
+	        		manager.save('999991', 123.4, 456.7, this.callback);
 	        	},
 
 	        	'it should have called collection "visits"': 
