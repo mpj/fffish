@@ -25,12 +25,20 @@ function assertCollectionCalled(collName) {
   }
 }
 
-function assertInsertCalled(doc, suite) {
+function assertInsertCalled(doc) {
   return function() {
-    assert.isTrue(
-      this.mock_mongo.current_collection.insert_called(doc));
+    var coll = this.mock_mongo.current_collection;
+    assert.isTrue( coll.insert_called(doc) );
   }
 }
+
+function assertEnsureIndexCalled(index) {
+  return function() {
+    var coll = this.mock_mongo.current_collection;
+    assert.isTrue( coll.ensure_index_called(index) );
+  }
+}
+
 
 function managerSave(id, lat, lon) {
   return function(manager) {
@@ -50,6 +58,8 @@ vows.describe('VisitManager').addBatch({
       topic: managerSave('999991', 123.4, 456.7),
 
       'collection called': assertCollectionCalled('visits'),
+
+      'ensureIndex called': assertEnsureIndexCalled({ loc: '2d' }),
 
       'insert called': assertInsertCalled(
         { id: '999991', loc: [ 123.4, 456.7 ] }),

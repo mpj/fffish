@@ -33,5 +33,12 @@ exports.MockCollection.prototype = {
     },
     insert_called: function(doc) {
     	return simpleCompare(doc, this.doc_inserted_last);
+	},
+	ensureIndex: function(index) {
+		this.ensure_index_called_with = index;
+	},
+	ensure_index_called: function(index) {
+		return simpleCompare(index, this.ensure_index_called_with);
 	}
+
 };
