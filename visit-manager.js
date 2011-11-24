@@ -4,7 +4,12 @@ exports.VisitManager = function (server) {
 exports.VisitManager.prototype = {
     save: function (id, lat, long, callback) {
     	this.server.collection('visits', function(err, coll) {
-    		coll.insert(id, lat, long, function(err, doc) {
+    		var doc = {
+    			'id': id,
+    			'lat': lat,
+    			'lon': long
+    		}
+    		coll.insert(doc, function(err, doc) {
     			callback(true);
     		});
     	});

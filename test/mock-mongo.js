@@ -1,5 +1,8 @@
 
 
+function simpleCompare(objA, objB) {
+	return JSON.stringify(objA) == JSON.stringify(objB);
+}
 
 exports.MockServer = function () {
 
@@ -24,16 +27,11 @@ exports.MockCollection = function(name) {
 };
 
 exports.MockCollection.prototype = {
-	insert: function(id, lat, long, callback) {
-		this.id_inserted 	= id;
-		this.lat_inserted 	= lat;
-		this.long_inserted 	= long;
-		callback(null, { id: id, lat: lat, long: long });
+	insert: function(doc, callback) {
+		this.doc_inserted_last 	= doc;
+		callback(null, doc);
     },
-    insert_called: function(id, latitude, longitude) {
-		return (
-			this.id_inserted == id &&
-			this.lat_inserted == latitude && 
-			this.long_inserted == longitude);
+    insert_called: function(doc) {
+    	return simpleCompare(doc, this.doc_inserted_last);
 	}
 };

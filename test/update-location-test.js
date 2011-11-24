@@ -6,6 +6,28 @@ var MockMongo	 = require('./mock-mongo').MockServer;
 
 var VisitManager   = visitManager.VisitManager;
 
+function getTopic(suite, type) {
+	var topics = suite.context.topics;
+	for(var i = 0; i<topics.length; i++) {
+		var topic = topics[i];
+		if (topic instanceof type)
+			return topic;
+	}
+	throw Error('Topic if type '+ type + 'not found');
+}
+
+function assertCollectionCalled(collName, suite) {
+	var mongo = getTopic(suite, MockMongo);
+	assert.isTrue(mongo.collection_called(collName));
+}
+
+function assertInsertCalled(doc, suite) {
+	var mongo = getTopic(suite, MockMongo);
+	assert.isTrue( 
+		mongo.current_collection.insert_called(doc)
+	);
+}
+
 vows.describe('VisitManager').addBatch({
     'given that we have a mock mongo server': {
     	topic: new MockMongo(),
@@ -23,24 +45,17 @@ vows.describe('VisitManager').addBatch({
 	        		topic.manager.save('999991', 123.4, 456.7, this.callback);
 	        	},
 
-	        	'it should have called collection "visits"': 
-		        	function() {
-		        		var mongo = 
-		        			this.context.topics[this.context.topics.length-1];
-		        		assert.isTrue(mongo.collection_called('visits'));
-		        	},
+	        	'it should have called collection "visits"': function() {
+	        		assertCollectionCalled('visits', this);
+	        	},
 
 	        	'callbck returns true': function(result) {
 	        		assert.equal(result, true);
 	        	}
 	        },
 
-	        'mongo_store_should_have_been_called': function(topic){
-	        	var mongo = this.context.topics[0].mongo;
-	        	assert.isTrue(
-		        	mongo.current_collection.insert_called(
-		        		'999991', 123.4, 456.7
-		        ));
+	        'mongo_insert_should_have_been_called': function(topic){
+	        	assertInsertCalled({ id: '999991', lat: 123.4, lon: 456.7}, this);
 	        }
 	    }
     }
