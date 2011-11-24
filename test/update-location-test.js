@@ -32,7 +32,6 @@ function assertInsertCalled(doc, suite) {
   }
 }
 
-
 function managerSave(id, lat, lon) {
   return function(manager) {
     manager.save(id, lat, lon, this.callback);
@@ -53,7 +52,7 @@ vows.describe('VisitManager').addBatch({
       'collection called': assertCollectionCalled('visits'),
 
       'insert called': assertInsertCalled(
-        { id: '999991', lat: 123.4, lon: 456.7} ),
+        { id: '999991', loc: [ 123.4, 456.7 ] }),
 
       'result is true': function(result) {
         assert.isTrue(result);
