@@ -2,36 +2,19 @@ var vows    = require('vows'),
     assert = require('assert');
 
 var visitManager = require('../visit-manager');
+var MockMongo	 = require('./mock-mongo').MockServer;
 
 var VisitManager   = visitManager.VisitManager;
 
 vows.describe('VisitManager').addBatch({
     'given that we have a mock mongo server': {
-    	topic: function() {
-    		return {
-    			id: 0,
-    			lat: 0,
-    			long: 0,
-    			store_was_called_with_params: function(id, lat, long) {
-    				return (
-	    				this.id == id &&
-    					this.lat == lat && 
-    					this.long == long);
-	    		},
-    			store: function(id, lat, long) {
-    				this.id = id;
-    				this.lat = lat;
-    				this.long = long;
-    				return true;
-    			}
-    		}	
-    	},
+    	topic: new MockMongo(),
     
 	    'given a VisitManager exists': {
-	        topic: function(fake_mongo) {
+	        topic: function(mongo) {
 	        	return {
-	        		mongo: fake_mongo,
-	        		manager: new VisitManager(fake_mongo)
+	        		mongo: mongo,
+	        		manager: new VisitManager(mongo)
 	        	}
 	        },
 
@@ -39,14 +22,23 @@ vows.describe('VisitManager').addBatch({
 	        	topic: function(topic) {
 	        		topic.manager.save('999991', 123.4, 456.7, this.callback);
 	        	},
-	        	'returns true': function(result) {
+
+	        	'it should have called collection "visits"': 
+		        	function() {
+		        		var mongo = 
+		        			this.context.topics[this.context.topics.length-1];
+		        		assert.isTrue(mongo.collection_called('visits'));
+		        	},
+
+	        	'callbck returns true': function(result) {
 	        		assert.equal(result, true);
 	        	}
 	        },
 
 	        'mongo_store_should_have_been_called': function(topic){
+	        	var mongo = this.context.topics[0].mongo;
 	        	assert.isTrue(
-		        	topic.mongo.store_was_called_with_params(
+		        	mongo.current_collection.insert_called(
 		        		'999991', 123.4, 456.7
 		        ));
 	        }
