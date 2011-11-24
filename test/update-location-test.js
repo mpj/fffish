@@ -32,6 +32,12 @@ function assertInsertCalled(doc, suite) {
 	);
 }
 
+function managerSave(id, lat, lon) {
+	return function(manager) {
+		manager.save(id, lat, lon, this.callback);
+	}
+}
+
 vows.describe('VisitManager').addBatch({
     'given that we have a mock mongo server': {
     	topic: new MockMongo(),
@@ -42,9 +48,7 @@ vows.describe('VisitManager').addBatch({
 	        },
 
 	        'and we call save with some parameters': {
-	        	topic: function(manager) {
-	        		manager.save('999991', 123.4, 456.7, this.callback);
-	        	},
+	        	topic: managerSave('999991', 123.4, 456.7),
 
 	        	'it should have called collection "visits"': 
 	        		assertCollectionCalled('visits')
