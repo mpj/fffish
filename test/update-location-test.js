@@ -59,7 +59,7 @@ vows.describe('VisitManager').addBatch({
 
       'collection called': assertCollectionCalled('visits'),
 
-      'ensureIndex called': assertEnsureIndexCalled({ loc: '2d' }),
+      'ensureIndex called': assertEnsureIndexCalled({ loc: '2d', id: 1 }),
 
       'insert called': assertInsertCalled(
         { id: '999991', loc: [ 123.4, 456.7 ] }),
