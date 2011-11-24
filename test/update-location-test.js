@@ -6,6 +6,8 @@ var MockMongo	 = require('./mock-mongo').MockServer;
 
 var VisitManager   = visitManager.VisitManager;
 
+// Iterates through the topics of a test suite
+// and returns the one matching the provided type.
 function getTopic(suite, type) {
 	var topics = suite.context.topics;
 	for(var i = 0; i<topics.length; i++) {
@@ -16,9 +18,11 @@ function getTopic(suite, type) {
 	throw Error('Topic if type '+ type + 'not found');
 }
 
-function assertCollectionCalled(collName, suite) {
-	var mongo = getTopic(suite, MockMongo);
-	assert.isTrue(mongo.collection_called(collName));
+function assertCollectionCalled(collName) {
+	return function() {
+		var mongo = getTopic(this, MockMongo);
+		assert.isTrue(mongo.collection_called(collName));
+	}
 }
 
 function assertInsertCalled(doc, suite) {
@@ -45,11 +49,11 @@ vows.describe('VisitManager').addBatch({
 	        		topic.manager.save('999991', 123.4, 456.7, this.callback);
 	        	},
 
-	        	'it should have called collection "visits"': function() {
-	        		assertCollectionCalled('visits', this);
-	        	},
+	        	'it should have called collection "visits"': 
+	        		assertCollectionCalled('visits')
+	        	,
 
-	        	'callbck returns true': function(result) {
+	        	'callback returns true': function(result) {
 	        		assert.equal(result, true);
 	        	}
 	        },
