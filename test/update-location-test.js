@@ -1,5 +1,5 @@
 var vows    = require('vows'),
-    assert = require('assert');
+    assert  = require('assert');
 
 var visitManager = require('../visit-manager');
 var MockMongo  = require('./mock-mongo').MockServer;
@@ -39,30 +39,25 @@ function assertEnsureIndexCalled(index) {
   }
 }
 
-
-function managerSave(id, lat, lon) {
-  return function(manager) {
-    manager.save(id, lat, lon, this.callback);
-  }
-}
-
 vows.describe('VisitManager').addBatch({
 
   'save': {
-    topic: function(mongo) {
+    topic: function() {
       this.mock_mongo = new MockMongo();
       return new VisitManager(this.mock_mongo)
     },
 
     'given that we call save with some parameters': {
-      topic: managerSave('999991', 123.4, 456.7),
+      topic: function(manager) {
+        manager.save('999991', 123.4, 456.7, this.callback);
+      },
 
       'collection called': assertCollectionCalled('visits'),
 
       'ensureIndex called': assertEnsureIndexCalled({ loc: '2d', id: 1 }),
 
       'insert called': assertInsertCalled(
-        { id: '999991', loc: [ 123.4, 456.7 ] }),
+        { user_id: '999991', loc: [ 123.4, 456.7 ] }),
 
       'result is true': function(result) {
         assert.isTrue(result);

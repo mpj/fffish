@@ -6,7 +6,7 @@ exports.VisitManager.prototype = {
     	this.server.collection('visits', function(err, coll) {
     		coll.ensureIndex( { loc: '2d', id: 1 } );
     		var doc = {
-    			'id': id,
+    			'user_id': id,
     			'loc': [lat, lon]
     		}
     		coll.insert(doc, function(err, doc) {
