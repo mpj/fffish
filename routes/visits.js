@@ -5,8 +5,18 @@ var mongo   = require('../lib/mongo_helpers'),
 exports.visits_create = function(req, res){
 
   var facebook_token =  req.param('fb_token'),
-      lat =             req.param('lat'),
-      lon =             req.param('lon');
+      lat =             parseFloat(req.param('lat')),
+      lon =             parseFloat(req.param('lon'));
+      
+  if (isNaN(lat)) {
+    res.send("lat was not in a correct format");
+    return;
+  }
+  if (isNaN(lon)) {
+    res.send("lon was not in a correct format");
+    return;
+  }
+    
 
   fb.withMe(facebook_token, function(me) {
     createVisit(me['id'], lat, lon, function(visit) {

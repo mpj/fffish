@@ -1,39 +1,81 @@
 
 var fb = require('../lib/facebook_helpers');
+var mongo = require('../lib/mongo_helpers');
 var withCollection = require('../lib/mongo_helpers').withCollection;
 
 exports.friends_nearby = function(req, res) {  
 
-  // TODO: get these from request
-  var token = "AAAEoXGwzDgoBAH08AT7aEiWsizZCnFvnTyLwCfe1o5uh0qcajYgZAkivMpN6WAicLRIyJqMNxGPdlHFxDhmU0ZBHZA6But12IHadnBpgHgZDZD";
-  var myLocation = [ 59.35900833063486, 18.04779052734375 ];
+  var token = req.param('fb_token'),
+      lat   = parseFloat(req.param('lat')),
+      lon   = parseFloat(req.param('lon'));
+
+  if (isNaN(lat)) {
+    res.send("lat was not in a correct format");
+    return;
+  }
+  if (isNaN(lon)) {
+    res.send("lon was not in a correct format");
+    return;
+  }
+    
+  //var myLocation = [ 59.35900833063486, 18.04779052734375 ];
+  var myLocation = [ lat, lon ];
   
   fb.withFriendIds(token, function(friend_ids) {
     
     // Create a geoindex on loc property
-    withPeopleCollection(function(coll) {
-      coll.ensureIndex( { loc: '2d', id: 1 }, function() {} );
-    });
-    withServer(function(db) {
+    mongo.withCollection('visits',function(coll) {
+      console.log('withCollection callback');
+      coll.ensureIndex( { loc: '2d', facebook_id: 1 }, {}, function(error, result) {
+        console.log('ensureIndex callback');
+        if (error) {
+          console.log("Error ensuring index", error);
+        } else {
+          console.log("Successfully ensured index", result);
 
-      // 111 km = approx 1 lat/long unit
-      var kilometer_in_lat_long_units = 1 / 111;
+          mongo.withServer(function(db) {
 
-      db.executeDbCommand( 
-        { 
-          geoNear : "people", 
-          near : myLocation, 
-          maxDistance: 0.8 * kilometer_in_lat_long_units, 
-          query : { facebook_id: { $in : friend_ids } },
-          num: 10
-        },
-        {},
-        function(err, result) {
-          console.log("yay, result", result);
-          res.send(result);
+            console.log("Trying to find", myLocation);
+
+            // 111 km = approx 1 lat/long unit
+            var kilometer_in_lat_long_units = 1 / 111;
+
+            db.executeDbCommand( 
+              { 
+                geoNear : 'visits', 
+                near : myLocation, 
+
+                //query : { facebook_id: { $in : friend_ids } },
+                num: 10
+              },
+              {},
+              function(error, response_body) {
+                
+                if (error) {
+                  console.log("executeDbCommand error:", error);
+                  return;
+                }
+
+                var first_document = response_body.documents[0];
+
+                if (first_document.errmsg) {
+                  var msg = first_document.errmsg;
+                  var code = first_document.code;
+                  console.log("executeDbCommand error: " + code + " " + msg );
+                  return;
+                }
+
+                var results = first_document.results;
+
+                console.log("executeDbCommand results: ", results);
+                res.send(results);
+              }
+            );
+          });
         }
-      );
+      });
     });
+    
   });
 
 };
