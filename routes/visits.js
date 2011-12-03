@@ -15,8 +15,7 @@ exports.visits_create = function(req, res){
   if (isNaN(lon)) {
     res.send("lon was not in a correct format");
     return;
-  }
-    
+  } 
 
   fb.withMe(facebook_token, function(me) {
     createVisit(Number(me['id']), lat, lon, function(visit) {

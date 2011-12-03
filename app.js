@@ -7,6 +7,9 @@ var express = require('express')
   , routes 	= require('./routes')
   , ejs 	= require('ejs');
 
+if (!process.env.NODE_ENV)
+  process.env.NODE_ENV = 'development'
+
 var app = module.exports = express.createServer();
 
 // Configuration
