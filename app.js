@@ -30,7 +30,10 @@ app.configure('production', function(){
 
 // Routes
 
-app.get('/', routes.index);
+app.get('/', routes.friends_nearby);
+
+app.post('/visits', routes.visits_create);
+app.get('/nearby', routes.friends_nearby);
 
 var port = process.env.PORT || 3000;
 
