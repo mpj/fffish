@@ -30,7 +30,7 @@ app.configure('production', function(){
 
 // Routes
 
-app.get('/', routes.friends_nearby);
+app.get('/', routes.index);
 
 app.post('/visits', routes.visits_create);
 app.get('/nearby', routes.friends_nearby);
