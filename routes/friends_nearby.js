@@ -1,10 +1,6 @@
-var Db = require('mongodb').Db;
-var Connection = require('mongodb').Connection;
-var Server = require('mongodb').Server;
-var BSON = require('mongodb').BSON;
-var ObjectID = require('mongodb').ObjectID;
 
-var withFriendIds = require('../lib/with_friend_ids').withFriendIds;
+var fb = require('../lib/facebook_helpers');
+var withCollection = require('../lib/mongo_helpers').withCollection;
 
 exports.friends_nearby = function(req, res) {  
 
@@ -12,7 +8,7 @@ exports.friends_nearby = function(req, res) {
   var token = "AAAEoXGwzDgoBAH08AT7aEiWsizZCnFvnTyLwCfe1o5uh0qcajYgZAkivMpN6WAicLRIyJqMNxGPdlHFxDhmU0ZBHZA6But12IHadnBpgHgZDZD";
   var myLocation = [ 59.35900833063486, 18.04779052734375 ];
   
-  withFriendIds(token, function(friend_ids) {
+  fb.withFriendIds(token, function(friend_ids) {
     
     // Create a geoindex on loc property
     withPeopleCollection(function(coll) {
@@ -41,20 +37,3 @@ exports.friends_nearby = function(req, res) {
   });
 
 };
-
-
-function withServer(callback) {
-  var db = new Db('fffish-development', 
-    new Server('localhost', 27017, { auto_reconnect: true }, {}));
-  var error_callback = function(){};
-  db.open(error_callback);
-  callback(db); 
-}
-
-function withPeopleCollection(callback) {
-  withServer(function(db) {
-    db.collection('people', function(err, coll) {
-      callback(coll);
-    });
-  });
-}

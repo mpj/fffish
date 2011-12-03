@@ -1,44 +1,32 @@
-var request = require('request'),
-    url     = require('url'),
-    http    = require('http');
+var mongo   = require('../lib/mongo_helpers'),
+    fb      = require('../lib/facebook_helpers');
 
 
-exports.visits_post = function(req, res){
+exports.visits_create = function(req, res){
 
+  var facebook_token =  req.param('fb_token'),
+      lat =             req.param('lat'),
+      lon =             req.param('lon');
 
-
-  request(
-    {uri: someUri}, function (error, response, body) {
-      console.log("Fetched " +someUri+ " OK!");
-      callback(body);
+  fb.withMe(facebook_token, function(me) {
+    createVisit(me['id'], lat, lon, function(visit) {
+      res.send('OK');
+    });
   });
-
-
-  UserManager.findByToken(TOKEN, function(current_user) {
-    FacebookManager.getFriendIds(current_user.facebook_token, function(facebook_ids) {
-      UserManager.findNearby({ 
-        loc: [123, 456], 
-        radius_meters: 1000,
-        facebook_ids: facebook_ids,
-      }, function(nearby_friends) {
-          var push_token = ;
-          NotifyManager.notify("At least one friend is nearby!"
-                            , current_user.push_token);
-      });
-  });
-
-  // Extract actual user_ids from the facebook user ids
-  // TODO: Make a query for these in the DB that are near.
-  // Probably need a UserManager here...
-  // 111 km = approx 1 lat/long unit
-
-    // TODO: Use neoGear instead of find, because
-    // it returns the distance too.
-    coll.find({ 
-      loc: { $near: [lat,lon], $maxDistance: 5 },
-      id: id
-
-    })
-  */
-  res.render('index', { title: 'Express', layout: false })
 };
+
+function createVisit(facebook_id, lat, lon, callback) {
+  console.log("createVisit entered.");
+  var visit = { facebook_id: facebook_id, 
+                loc: [lat, lon] }
+  mongo.withCollection('visits', function(visits) {
+    visits.insert(visit, function(err, result) {
+      if (err) {
+        console.log("createVisit error:", err);
+      } else {
+        console.log("insert succeeded, returning", result);
+        callback(result); 
+      }
+    });
+  });
+}
