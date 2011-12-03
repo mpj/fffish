@@ -1,0 +1,15 @@
+curl 'http://localhost:3000/nearby?fb_token=AAAEoXGwzDgoBAHbSKYoSOlrbWqYQ3xMOaYOhaX3wS52SORU5tzpvZBtkZBZATVSTh7GNUBIZAjByIt6ZC0E7ueEwzn6VJEAK1FksrN0BjywZDZD&lat=59.35900833063487&lon=18.04779052734375'
+
+curl --data 'fb_token=AAAEoXGwzDgoBAHbSKYoSOlrbWqYQ3xMOaYOhaX3wS52SORU5tzpvZBtkZBZATVSTh7GNUBIZAjByIt6ZC0E7ueEwzn6VJEAK1FksrN0BjywZDZD&lat=59.35900833063487&lon=18.04779052734375' 'http://localhost:3000/visits'
+
+https://graph.facebook.com/me/friends?access_token=AAAEoXGwzDgoBAHbSKYoSOlrbWqYQ3xMOaYOhaX3wS52SORU5tzpvZBtkZBZATVSTh7GNUBIZAjByIt6ZC0E7ueEwzn6VJEAK1FksrN0BjywZDZD
+
+[
+	{"dis":0,
+	 "obj":
+	 	{"facebook_id":"640798226",
+	 	"loc":[59.35900833063487,18.04779052734375],
+	 	"_id":"4eda6bda7dd85d133c000]
+
+
+db.executeDbCommand({ geoNear : 'visits', near : location, query : { facebook_id: { $in : friend_ids } } }); 
