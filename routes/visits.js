@@ -30,8 +30,10 @@ exports.visits_create = function(req, res){
 
 function createVisit(facebook_id, lat, lon, callback) {
   console.log("createVisit entered.");
+  var now = new Date().getTime();
   var visit = { facebook_id: facebook_id, 
-                loc: [lat, lon] }
+                loc: [lat, lon],
+                ts: now }
   mongo.withCollection('visits', function(visits) {
     visits.insert(visit, function(err, result) {
       if (err) {
