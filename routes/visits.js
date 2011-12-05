@@ -17,7 +17,11 @@ exports.visits_create = function(req, res){
     return;
   } 
 
-  fb.withMe(facebook_token, function(me) {
+  fb.withMe(facebook_token, function(err, me) {
+    if (err) {
+      res.send(err);
+      return;
+    }
     createVisit(Number(me['id']), lat, lon, function(visit) {
       res.send('OK');
     });
