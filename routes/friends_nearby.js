@@ -38,7 +38,6 @@ exports.friends_nearby = function(req, res) {
       }
       console.log("Returning nearby friends response ...");
       res.send({ nearby_friends: nearby_friends });
-      res.end();
     });
   });
 }
