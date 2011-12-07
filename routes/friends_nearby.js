@@ -25,6 +25,8 @@ exports.friends_nearby = function(req, res) {
   fb.withFriendIds(token, function(friend_ids) {
     withVisitsNearLocation(myLocation, friend_ids, function(visits) {
 
+      console.log("Finding friends near ", lat, lon);
+
       // 111 km = approx 1 lat/long unit
       var km_in_lat_long_units = 1.0 / 111.05;
 
