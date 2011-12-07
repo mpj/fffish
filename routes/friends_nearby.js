@@ -25,14 +25,17 @@ exports.friends_nearby = function(req, res) {
   fb.withFriendIds(token, function(friend_ids) {
     withVisitsNearLocation(myLocation, friend_ids, function(visits) {
 
+      // 111 km = approx 1 lat/long unit
+      var meter_in_lat_long_units = 1.0 / (111.05 * 1000.0);
+
       // Create a hash of facebook ids mapped
       // to distance.
       var dist_map = {};
       for (var i=0;i<visits.length;i++) {
         var row = visits[i];
         var fb_id = row.obj.facebook_id;
-        
-        var distance_meters = parseFloat(row.dis) * 111 * 1000;
+
+        var distance_meters = parseFloat(row.dis) * meter_in_lat_long_units;
         distance_meters = Math.floor(distance_meters);
         // Only assign the first, we are sorting by
         // ts in the query.
@@ -65,8 +68,6 @@ function withVisitsNearLocation(location, friend_ids, callback) {
     // Map reduce or prune data.
 
     console.log("Executing withVisitsNearLocation with");
-    // 111 km = approx 1 lat/long unit
-    var kilometer_in_lat_long_units = 1 / 111;
 
     var queryopts = { 
         geoNear : 'visits', 
