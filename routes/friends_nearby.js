@@ -31,8 +31,9 @@ exports.friends_nearby = function(req, res) {
       for (var i=0;i<visits.length;i++) {
         var row = visits[i];
         var fb_id = row.obj.facebook_id;
-        var distance_meters = parseFloat(row.dis) * 111 * 1000;
         
+        var distance_meters = parseFloat(row.dis) * 111 * 1000;
+        distance_meters = Math.floor(distance_meters);
         // Only assign the first, we are sorting by
         // ts in the query.
         if (!dist_map[fb_id])
