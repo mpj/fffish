@@ -44,8 +44,8 @@ exports.friends_nearby = function(req, res) {
 
         //var distance_km = parseFloat(row.dis) / km_in_lat_long_units;
         //distance_meters = Math.floor(distance_km * 1000);
-        var distance_meters = row.dis * earthRadius;
-        row.obj.distance_meters = distance_meters;
+        var distance_km = row.dis * earthRadius;
+        row.obj.distance_meters = Math.floor(distance_meters * 1000);
         
         // Only assign the newest
         if (!dist_map[fb_id] || dist_map[fb_id].ts < row.obj.ts) {
