@@ -42,10 +42,12 @@ exports.friends_nearby = function(req, res) {
 
         var distance_km = parseFloat(row.dis) / km_in_lat_long_units;
         distance_meters = Math.floor(distance_km * 1000);
-        // Only assign the first, we are sorting by
-        // ts in the query.
-        if (!dist_map[fb_id])
-          dist_map[fb_id] = distance_meters;
+        row.obj.distance_meters = distance_meters;
+        
+        // Only assign the newest
+        if (!dist_map[fb_id] || dist_map[fb_id].ts < row.obj.ts) {
+          dist_map[fb_id] = row.obj;
+        }
       }
 
       // Construct an array of the hash
@@ -53,7 +55,7 @@ exports.friends_nearby = function(req, res) {
       for(key in dist_map)
       {
         nearby_friends.push({
-            distance: dist_map[key]    
+            distance: dist_map[key].distance_meters    
           , facebook_id: key 
         });
       }
@@ -77,8 +79,7 @@ function withVisitsNearLocation(location, friend_ids, callback) {
     var queryopts = { 
         geoNear : 'visits', 
         near : location, 
-        query : { facebook_id: { $in : friend_ids } },
-        sort : { ts: -1 }
+        query : { facebook_id: { $in : friend_ids } }
       };
     console.log("queryopts", queryopts);
 
