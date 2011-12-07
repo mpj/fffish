@@ -22,7 +22,7 @@ exports.visits_create = function(req, res){
       res.send(err);
       return;
     }
-    createVisit(Number(me['id']), lon,lat function(visit) {
+    createVisit(Number(me['id']), lon, lat, function(visit) {
       res.send('OK');
     });
   });
