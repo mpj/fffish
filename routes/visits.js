@@ -22,17 +22,17 @@ exports.visits_create = function(req, res){
       res.send(err);
       return;
     }
-    createVisit(Number(me['id']), lat, lon, function(visit) {
+    createVisit(Number(me['id']), lon,lat function(visit) {
       res.send('OK');
     });
   });
 };
 
-function createVisit(facebook_id, lat, lon, callback) {
+function createVisit(facebook_id, lon, lat, callback) {
   console.log("createVisit entered.");
   var now = new Date().getTime();
   var visit = { facebook_id: facebook_id, 
-                loc: [lat, lon],
+                loc: [ lon, lat ],
                 ts: now }
   mongo.withCollection('visits', function(visits) {
     visits.insert(visit, function(err, result) {

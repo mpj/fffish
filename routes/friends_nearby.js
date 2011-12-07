@@ -19,7 +19,7 @@ exports.friends_nearby = function(req, res) {
     return;
   }
     
-  var myLocation = [ lat, lon ];
+  var myLocation = [ lon, lat ];
 
   // Do this while withFriendIds is running.
   mongo.ensureIndex('visits', { loc: '2d', ts: 1, facebook_id: 1 }, function(){});
@@ -27,10 +27,7 @@ exports.friends_nearby = function(req, res) {
   fb.withFriendIds(token, function(friend_ids) {
     withVisitsNearLocation(myLocation, friend_ids, function(visits) {
 
-      console.log("Finding friends near " + lat + lon);
-
-      // 111 km = approx 1 lat/long unit
-      var km_in_lat_long_units = 1.0 / 111.05;
+      console.log("Finding friends near " + lon + ","+ lat);
 
       // Create a hash of facebook ids mapped
       // to distance.
@@ -42,8 +39,6 @@ exports.friends_nearby = function(req, res) {
         console.log("Row ts: " + row.obj.ts); 
         console.log("Row dis: " + row.dis);
 
-        //var distance_km = parseFloat(row.dis) / km_in_lat_long_units;
-        //distance_meters = Math.floor(distance_km * 1000);
         var distance_km = row.dis * earthRadius;
         row.obj.distance_meters = Math.floor(distance_km * 1000);
         
