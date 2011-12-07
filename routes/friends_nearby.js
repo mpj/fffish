@@ -26,7 +26,7 @@ exports.friends_nearby = function(req, res) {
     withVisitsNearLocation(myLocation, friend_ids, function(visits) {
 
       // 111 km = approx 1 lat/long unit
-      var meter_in_lat_long_units = 1.0 / (111.05 * 1000.0);
+      var km_in_lat_long_units = 1.0 / 111.05;
 
       // Create a hash of facebook ids mapped
       // to distance.
@@ -35,8 +35,8 @@ exports.friends_nearby = function(req, res) {
         var row = visits[i];
         var fb_id = row.obj.facebook_id;
 
-        var distance_meters = parseFloat(row.dis) * meter_in_lat_long_units;
-        distance_meters = Math.floor(distance_meters);
+        var distance_km = parseFloat(row.dis) * km_in_lat_long_units;
+        distance_meters = Math.floor(distance_meters * 1000);
         // Only assign the first, we are sorting by
         // ts in the query.
         if (!dist_map[fb_id])
