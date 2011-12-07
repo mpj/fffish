@@ -2,6 +2,8 @@ var fb = require('../lib/facebook_helpers');
 var mongo = require('../lib/mongo_helpers');
 var withCollection = require('../lib/mongo_helpers').withCollection;
 
+var earthRadius = 6378; // km
+
 exports.friends_nearby = function(req, res) {  
 
   var token = req.param('fb_token'),
@@ -40,8 +42,9 @@ exports.friends_nearby = function(req, res) {
         console.log("Row ts: " + row.obj.ts); 
         console.log("Row dis: " + row.dis);
 
-        var distance_km = parseFloat(row.dis) / km_in_lat_long_units;
-        distance_meters = Math.floor(distance_km * 1000);
+        //var distance_km = parseFloat(row.dis) / km_in_lat_long_units;
+        //distance_meters = Math.floor(distance_km * 1000);
+        var distance_meters = row.dis * earthRadius;
         row.obj.distance_meters = distance_meters;
         
         // Only assign the newest
@@ -76,8 +79,14 @@ function withVisitsNearLocation(location, friend_ids, callback) {
 
     console.log("Executing withVisitsNearLocation with");
 
+
+    var range = 50; // km
+    var range_in_radians = range / earthRadius;
+
     var queryopts = { 
         geoNear : 'visits', 
+        spherical: true,
+        maxDistance : range_in_radians, 
         near : location, 
         query : { facebook_id: { $in : friend_ids } }
       };
