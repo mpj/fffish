@@ -27,10 +27,14 @@ exports.visits_create = function(req, res){
       
 
       withDistancesOfFriends(facebook_token, function(err, friends_distance) {
+        console.log('withDistancesOfFriends returned');
         for(var i=0;i<friends_distance.length;i++) {
           var fd = friends_distance[i];
           if (fd.distance < 5000) {
+            console.log('Found frieind', fd);
             fb.withUser(facebook_token, fd.facebook_id, function(err, friend) {
+
+              console.log('Looked up friend', friend);
               var apns_token = "381576c9 863c1c5f 2ec39bff bb64e529 f1e45cfc 0480d6df a28ed3e4 bb7896a0";
               options =   { cert: '../certificates/apns-dev-cert.pem' /* Certificate file */
                 , key:  '../certificates/apns-dev-key.pem'  /* Key file */
@@ -53,6 +57,8 @@ exports.visits_create = function(req, res){
                 note.device = myDevice;
 
                 apnsConnection.sendNotification(note);
+
+                console.log('Sent notification');
             });
             break;
             res.send('OK');
