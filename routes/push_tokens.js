@@ -9,6 +9,7 @@ exports.push_tokens_set = function(req, res) {
 
   
   fb.withMe(fb_token, function(err, me) {
+    console.log('inserting',me['id'], apns_token);
     token.insertToken(me['id'], apns_token, function(err, result) {
       res.send("OK");
     });
