@@ -1,6 +1,6 @@
-var withDistancesOfFriends = require('../lib/facebook_helpers').withDistancesOfFriends;
+var withDistancesOfFriends = require('../lib/visits_helpers').withDistancesOfFriends;
 
-var earthRadius = 6378; // km
+
 
 exports.friends_nearby = function(req, res) {  
 
@@ -16,10 +16,8 @@ exports.friends_nearby = function(req, res) {
     res.send("lon was not in a correct format");
     return;
   }
-    
-  var myLocation = [ lon, lat ];
 
-  withDistancesOfFriends(token, function(err, nearby_friends){
+  withDistancesOfFriends(token, [ lon, lat ], function(err, nearby_friends){
     res.send({ nearby_friends: nearby_friends });
   });
   

@@ -1,7 +1,12 @@
 var mongo   = require('../lib/mongo_helpers'),
-    withDistancesOfFriends = require('../lib/facebook_helpers').withDistancesOfFriends;
+    withDistancesOfFriends = require('../lib/visits_helpers').withDistancesOfFriends;
 var fb = require('../lib/facebook_helpers');
 var apns = require('apn');
+var sys = require("sys"),  
+  http = require("http"),  
+  path = require("path"),  
+  url = require("url"),  
+  filesys = require("fs");  
 
 exports.visits_create = function(req, res){
 
@@ -25,9 +30,10 @@ exports.visits_create = function(req, res){
     }
     createVisit(Number(me['id']), lon, lat, function(visit) {
       
+      res.send('OK');
 
-      withDistancesOfFriends(facebook_token, function(err, friends_distance) {
-        console.log('withDistancesOfFriends returned');
+      withDistancesOfFriends(facebook_token, [lon, lat], function(err, friends_distance) {
+        console.log('withDistancesOfFriends returned', friends_distance);
         for(var i=0;i<friends_distance.length;i++) {
           var fd = friends_distance[i];
           if (fd.distance < 5000) {
@@ -35,10 +41,11 @@ exports.visits_create = function(req, res){
             fb.withUser(facebook_token, fd.facebook_id, function(err, friend) {
 
               console.log('Looked up friend', friend);
-              var apns_token = "381576c9 863c1c5f 2ec39bff bb64e529 f1e45cfc 0480d6df a28ed3e4 bb7896a0";
-              options =   { cert: '../certificates/apns-dev-cert.pem' /* Certificate file */
-                , key:  '../certificates/apns-dev-key.pem'  /* Key file */
-                , gateway: 'gateway.push.apple.com' /* gateway address */
+              var apns_token = "381576c9863c1c5f2ec39bffbb64e529f1e45cfc0480d6dfa28ed3e4bb7896a0";
+              options =   { 
+                cert: path.join(process.cwd(),'certificates/apns-dev-cert.pem') /* Certificate file */
+                , key:  path.join(process.cwd(),'certificates/apns-dev-key.pem')  /* Key file */
+                , gateway: 'gateway.sandbox.push.apple.com' /* gateway address */
                 , port: 2195 /* gateway port */
                 , enhanced: true /* enable enhanced format */
                 , errorCallback: 
@@ -57,12 +64,11 @@ exports.visits_create = function(req, res){
                 note.device = myDevice;
 
                 apnsConnection.sendNotification(note);
-                // test
+                // createVisit
 
                 console.log('Sent notification');
             });
             break;
-            res.send('OK');
           } 
         }
       });
