@@ -1,6 +1,7 @@
 var mongo   = require('../lib/mongo_helpers'),
     withDistancesOfFriends = require('../lib/visits_helpers').withDistancesOfFriends;
 var fb = require('../lib/facebook_helpers');
+var token = require('../lib/token_helpers');
 var apns = require('apn');
 var sys = require("sys"),  
   http = require("http"),  
@@ -41,8 +42,10 @@ exports.visits_create = function(req, res){
             fb.withUser(facebook_token, fd.facebook_id, function(err, friend) {
 
               console.log('Looked up friend', friend);
-              var apns_token = "381576c9863c1c5f2ec39bffbb64e529f1e45cfc0480d6dfa28ed3e4bb7896a0";
-              options =   { 
+
+              token.getToken(me['id'], function(err, apns_token) {
+                console.log('Trying with token', apns_token);
+                options =   { 
                 cert: path.join(process.cwd(),'certificates/apns-dev-cert.pem') /* Certificate file */
                 , key:  path.join(process.cwd(),'certificates/apns-dev-key.pem')  /* Key file */
                 , gateway: 'gateway.sandbox.push.apple.com' /* gateway address */
@@ -67,6 +70,8 @@ exports.visits_create = function(req, res){
                 // createVisit
 
                 console.log('Sent notification');
+              });
+              
             });
             break;
           } 

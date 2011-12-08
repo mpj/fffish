@@ -37,6 +37,7 @@ app.get('/', routes.index);
 
 app.post('/visits', routes.visits_create);
 app.get('/nearby', routes.friends_nearby);
+app.post('/push_tokens_set', routes.push_tokens_set);
 
 var port = process.env.PORT || 3000;
 
