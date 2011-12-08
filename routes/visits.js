@@ -57,6 +57,7 @@ exports.visits_create = function(req, res){
                 note.device = myDevice;
 
                 apnsConnection.sendNotification(note);
+                // test
 
                 console.log('Sent notification');
             });
