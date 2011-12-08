@@ -41,7 +41,7 @@ exports.visits_create = function(req, res){
             , enhanced: true /* enable enhanced format */
             , errorCallback: 
                 function(error_code, obj) { 
-                  console.log("Apple returned error: ", error_code, "obj sent:" obj);
+                  console.log("Apple returned error: ", error_code, "obj sent:", obj);
                 } /* Callback when error occurs */
             , cacheLength: 5 /* Notifications to cache for error purposes */
             };
