@@ -37,7 +37,7 @@ exports.visits_create = function(req, res){
         console.log('withDistancesOfFriends returned', friends_distance);
         for(var i=0;i<friends_distance.length;i++) {
           var fd = friends_distance[i];
-          if (fd.distance < 5000) {
+          if (fd.distance < 1250) {
             console.log('Found frieind', fd);
             fb.withUser(facebook_token, fd.facebook_id, function(err, friend) {
 
@@ -62,7 +62,7 @@ exports.visits_create = function(req, res){
 
                 var note = new apns.notification();
 
-                note.badge = 1;
+                //note.badge = 1;
                 note.alert = friend['name'] + " is nearby.";
                 note.device = myDevice;
 
