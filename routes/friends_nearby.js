@@ -22,12 +22,20 @@ exports.friends_nearby = function(req, res) {
       console.log("withDistancesOfFriends returned error: ", err);
       return;
     }
+    
+    // Sort on distance, reversed
+    nearby_friends.sort(function(af, bf) {
+      return bf.distance - af.distance;
+    });
+
     for(var i=0;i<nearby_friends.length;i++) {
       var fd = nearby_friends[i];
       
       // Round up to nearest thousand
       fd.distance = Math.floor((fd.distance / 1000) + 0.999)*1000;
     }
+
+    
 
     res.send({ nearby_friends: nearby_friends });
   });
