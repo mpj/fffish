@@ -25,7 +25,7 @@ exports.friends_nearby = function(req, res) {
     
     // Sort on distance, reversed
     nearby_friends.sort(function(af, bf) {
-      return bf.distance - af.distance;
+      return af.distance - bf.distance;
     });
 
     for(var i=0;i<nearby_friends.length;i++) {
