@@ -62,7 +62,7 @@ exports.visits_create = function(req, res){
 
                 var note = new apns.notification();
 
-                //note.badge = 1;
+                note.badge = 0;
                 note.alert = friend['name'] + " is nearby.";
                 note.device = myDevice;
 
