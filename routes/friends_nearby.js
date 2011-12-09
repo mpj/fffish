@@ -18,6 +18,10 @@ exports.friends_nearby = function(req, res) {
   }
 
   withDistancesOfFriends(token, [ lon, lat ], function(err, nearby_friends){
+    if (err) {
+      console.log("withDistancesOfFriends returned error: ", err);
+      return;
+    }
     for(var i=0;i<nearby_friends.length;i++) {
       var fd = nearby_friends[i];
       
