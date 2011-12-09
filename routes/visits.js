@@ -44,6 +44,15 @@ exports.visits_create = function(req, res){
               console.log('Looked up friend', friend);
 
               token.getToken(me['id'], function(err, apns_token) {
+                if(err) {
+                  console.log("getToken returned error:", err);
+                  return;
+                }
+                if (!apns_token) {
+                  console.log("Tried to find token for "+me['id']+", but failed");
+                  return;
+                }
+
                 console.log('Trying with token', apns_token);
                 options =   { 
                 cert: path.join(process.cwd(),'certificates/apns-dev-cert.pem') /* Certificate file */
