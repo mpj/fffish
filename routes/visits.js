@@ -47,7 +47,7 @@ exports.visits_create = function(req, res){
                 console.log('Trying with token', apns_token);
                 options =   { 
                 cert: path.join(process.cwd(),'certificates/apns-dev-cert.pem') /* Certificate file */
-                , key:  path.join(process.cwd(),'certificates/apns-dev-key.pem')  /* Key file */
+                , key:  path.join(process.cwd(),'certificates/apns-dev-key-noenc.pem')  /* Key file */
                 , gateway: 'gateway.sandbox.push.apple.com' /* gateway address */
                 , port: 2195 /* gateway port */
                 , enhanced: true /* enable enhanced format */
