@@ -3,7 +3,7 @@
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
-      "express": "2.5.0"
+      "express": "4.19.2"
     , "jade": ">= 0.0.1"
     , "ejs": ">= 0.0.1"
     , "vows": ">= 0.5.13"
